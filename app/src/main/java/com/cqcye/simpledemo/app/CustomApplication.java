@@ -24,12 +24,12 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        
+
         FileUtils.creatDirection(ConstantValues.PROJECT_NAME);
         /**
          * 初始化ImageLoader
          */
-        String dirPath = FileUtils.getDirAbsolutPath(ConstantValues.PROJECT_NAME + ".cache/");
+        String dirPath = FileUtils.getDirAbsolutPath(ConstantValues.PROJECT_NAME + ".cache/");  //图片的缓存文件夹
         File cacheDir = new File(dirPath);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(this)

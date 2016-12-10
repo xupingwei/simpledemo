@@ -85,7 +85,11 @@ public class IndexAdapter extends BaseAdapter {
             holder.tvDesc.setTextColor(Color.parseColor("#000000"));
         }
 
-        ImageLoader.getInstance().displayImage(bean.getImageHref(), holder.ivThumbnail, imageOptions);
+        if (null == bean.getImageHref()) {
+            holder.ivThumbnail.setImageBitmap(null);
+        } else {
+            ImageLoader.getInstance().displayImage(bean.getImageHref(), holder.ivThumbnail);
+        }
 
         return view;
     }
