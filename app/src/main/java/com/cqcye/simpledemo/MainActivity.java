@@ -1,6 +1,7 @@
 package com.cqcye.simpledemo;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private IndexAdapter mAdapter;
     private Toolbar toolbar;
     private List<DescBean> descBeens = new ArrayList<>();
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +33,29 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         initView();
         initData();
+        initEvent();
+    }
+
+    private void initEvent() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        refreshLayout.setRefreshing(true);
         HttpClientUtils.httpGet(this, "", new Object(),
                 ResultBean.class, "获取数据",
                 new HttpDoneListener() {
                     @Override
                     public void requestSuccess(Object obj, String action) {
+                        refreshLayout.setRefreshing(false);
                         ResultBean resultBean = (ResultBean) obj;
                         toolbar.setTitle(resultBean.getTitle());
                         descBeens = resultBean.getRows();
@@ -51,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void requestFailed(int failedCode, String failedMessage, String action) {
+                        refreshLayout.setRefreshing(false);
                         Toast.makeText(MainActivity.this, failedMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -62,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initView() {
         mListView = (ListView) findViewById(R.id.listview);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 
     }
 
